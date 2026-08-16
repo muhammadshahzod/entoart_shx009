@@ -4,6 +4,31 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #333;
 }
+/* Tungi rejim stili */
+body.dark-mode {
+  background-color: #121212 !important;
+  color: #f1f1f1 !important;
+}
+
+body.dark-mode header,
+body.dark-mode footer,
+body.dark-mode nav,
+body.dark-mode .card,
+body.dark-mode .product-card,
+body.dark-mode div {
+  background-color: #1e1e1e !important;
+  color: #ffffff !important;
+}
+
+/* Tugma ko'rinishi */
+#theme-toggle {
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: transparent;
+  color: inherit;
+}
 
 /* Logotip uchun yangi uslublar */
 .brand-logo-container {

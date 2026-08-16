@@ -15,9 +15,9 @@
     <!-- Google Fonts: Plus Jakarta Sans -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Bootstrap Icons (Kvadratlarni to'g'rilash uchun) -->
+    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
     <style>
         :root {
             --bg-primary: #f5f2eb;
@@ -31,12 +31,51 @@
             --shadow-hover: 0 20px 45px rgba(139, 58, 23, 0.08);
         }
 
+        /* Dark Mode o'zgaruvchilari va stillari */
+        body.dark-mode {
+            --bg-primary: #121212;
+            --surface-color: #1e1e1e;
+            --text-main: #f1f1f1;
+            --border-subtle: #333333;
+        }
+
+        body.dark-mode .navbar-custom {
+            background: rgba(20, 20, 20, 0.85) !important;
+            border-bottom: 1px solid #333 !important;
+        }
+
+        body.dark-mode .card,
+        body.dark-mode .bg-white,
+        body.dark-mode .dropdown-menu-custom,
+        body.dark-mode .modal-content {
+            background-color: #1e1e1e !important;
+            color: #ffffff !important;
+        }
+
+        body.dark-mode .dropdown-item {
+            color: #ccc !important;
+        }
+
+        body.dark-mode .dropdown-item:hover {
+            background-color: #2a2a2a !important;
+            color: #fff !important;
+        }
+
+        body.dark-mode .text-dark {
+            color: #ffffff !important;
+        }
+
+        body.dark-mode .text-muted {
+            color: #aaa !important;
+        }
+
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: var(--bg-primary);
             color: var(--text-main);
             overflow-x: hidden;
             animation: fadeInBody 0.5s ease-in-out;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         @keyframes fadeInBody {
@@ -83,7 +122,7 @@
 
         @keyframes dropdownFade {
             from { opacity: 0; transform: translateY(10px) scale(0.98); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Premium Search Box */
@@ -107,7 +146,7 @@
             transition: background 0.2s;
         }
 
-        /* Hero Banner with Rich Gradient */
+        /* Hero Banner */
         .hero-banner {
             background: linear-gradient(135deg, #181818 0%, #2c2421 100%);
             border-radius: 32px;
@@ -138,7 +177,7 @@
             letter-spacing: 0.5px;
         }
 
-        /* Product Cards & Micro-interactions */
+        /* Product Cards */
         .product-card {
             border: none;
             border-radius: 24px;
@@ -202,7 +241,7 @@
             transform: scale(1.15);
         }
 
-        /* Modals Modern Glass & Smooth Scale */
+        /* Modals */
         .modal-content {
             border: none;
             border-radius: 28px;
@@ -215,7 +254,7 @@
             to { opacity: 1; transform: scale(1); }
         }
         
-        /* Toast Notification Container */
+        /* Toast Container */
         #toast-container {
             position: fixed;
             bottom: 30px;
@@ -255,10 +294,9 @@
     </style>
 </head>
 <body>
-    <!-- Yashirin inputlarni BODY ichiga o'tkazildi -->
     <input type="hidden" id="viewProductId">
     <input type="hidden" id="reviewProductId">
-<!-- Toast Container -->
+
     <div id="toast-container"></div>
 
     <!-- Navbar -->
@@ -268,7 +306,6 @@
                 <span class="fw-bold tracking-tight">ETNOART</span>
             </a>
 
-            <!-- Etsy Style Categories Dropdown Button -->
             <div class="dropdown me-3 d-none d-lg-block">
                 <button class="btn btn-light rounded-pill px-4 py-2.5 fw-bold border-0 shadow-sm d-flex align-items-center gap-2 dropdown-toggle bg-white" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="categoriesBtnText">
                     <i class="fa fa-bars text-secondary"></i> Kategoriyalar
@@ -293,14 +330,17 @@
             </form>
 
             <div class="d-flex align-items-center gap-2">
-                <!-- Sayt tili selectori (UZ, EN, RU) -->
+                <!-- Tungi rejim tugmasi -->
+                <button id="theme-toggle" onclick="toggleTheme()" class="btn btn-light rounded-pill px-3 py-2 shadow-sm border-0 bg-white fw-bold me-1">
+                    🌙 Dark
+                </button>
+
                 <select id="langSelect" class="form-select form-select-sm rounded-pill px-3 border-0 bg-white shadow-sm fw-semibold" style="width: 85px;" onchange="changeLanguage()">
                     <option value="uz">UZ</option>
                     <option value="en">EN</option>
                     <option value="ru">RU</option>
                 </select>
 
-                <!-- Valyuta selectori (UZS, USD, RUB, CNY) -->
                 <select id="currencySelect" class="form-select form-select-sm rounded-pill px-2 border-0 bg-white shadow-sm fw-semibold" style="width: 105px;" onchange="changeCurrency()">
                     <option value="UZS">UZS (so'm)</option>
                     <option value="USD">USD ($)</option>
@@ -319,22 +359,20 @@
                 </button>
 
                 {% if session.get('user') %}
-                <!-- Foydalanuvchi kirgan bo'lsa -->
                 <div class="dropdown">
-                 <button class="btn btn-light rounded-pill px-3 py-2 shadow-sm fw-bold border-0 bg-white dropdown-toggle d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown">
-                    <img src="{{ session['user']['picture'] }}" alt="avatar" class="rounded-circle" width="20" height="20">
-                    {{ session['user']['name'] }}
-                </button>
-                <ul class="dropdown-menu shadow border-0">
-                    <li><a class="dropdown-item text-danger" href="/logout">Chiqish</a></li>
-                     </ul>
-                      </div>
-                      {% else: %}
-                      <!-- Kirilmagan bo'lsa -->
-                      <a href="/login/google" class="btn btn-light rounded-pill px-3 py-2 shadow-sm fw-bold border-0 bg-white d-flex align-items-center gap-2 text-dark text-decoration-none">
-                        <i class="fa-regular fa-user text-dark"></i> Kirish
-                    </a>
-                    {% endif %}
+                    <button class="btn btn-light rounded-pill px-3 py-2 shadow-sm fw-bold border-0 bg-white dropdown-toggle d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown">
+                        <img src="{{ session['user']['picture'] }}" alt="avatar" class="rounded-circle" width="20" height="20">
+                        {{ session['user']['name'] }}
+                    </button>
+                    <ul class="dropdown-menu shadow border-0">
+                        <li><a class="dropdown-item text-danger" href="/logout">Chiqish</a></li>
+                    </ul>
+                </div>
+                {% else: %}
+                <a href="/login/google" class="btn btn-light rounded-pill px-3 py-2 shadow-sm fw-bold border-0 bg-white d-flex align-items-center gap-2 text-dark text-decoration-none">
+                    <i class="fa-regular fa-user text-dark"></i> Kirish
+                </a>
+                {% endif %}
 
                 <a href="/admin" class="btn btn-dark btn-sm rounded-pill px-3 py-2 fw-bold shadow-sm d-none d-lg-block" data-translate="admin">Admin</a>
             </div>
@@ -353,7 +391,6 @@
             </div>
         </div>
 
-        <!-- Joriy tanlangan kategoriya sarlavhasi -->
         {% if selected_category %}
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h3 class="fw-bold m-0">📁 Kategoriya: {{ selected_category }}</h3>
@@ -365,7 +402,6 @@
         <div class="row g-4">
             {% for p in products %}
             <div class="col-xl-3 col-lg-4 col-md-6">
-                <!-- Product Card with Data Attributes for safety -->
                 <div class="card product-card h-100 position-relative product-item"
                      data-id="{{ p.id }}"
                      data-title="{{ p.title | e }}"
@@ -528,7 +564,34 @@
     <!-- Bootstrap & Custom JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Tarjimalar lug'ati (UZ, EN, RU)
+        // Dark Mode tugmasi mantig'i
+        function toggleTheme() {
+            const body = document.body;
+            const button = document.getElementById('theme-toggle');
+            
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+                if (button) button.innerHTML = '☀️ Light';
+            } else {
+                localStorage.setItem('theme', 'light');
+                if (button) button.innerHTML = '🌙 Dark';
+            }
+        }
+
+        // Sahifa yuklanganda mavzuni tiklash
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            const button = document.getElementById('theme-toggle');
+            
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                if (button) button.innerHTML = '☀️ Light';
+            }
+        });
+
+        // Tarjimalar lug'ati
         const translations = {
             uz: {
                 site_title: "Etnoart — Eksklyuziv O'zbek Hunarmandchilik bozori",
@@ -643,7 +706,6 @@
             }
         };
 
-        // Valyuta kurslari va belgilari
         const currencies = {
             UZS: { rate: 1, symbol: "so'm" },
             USD: { rate: 12800, symbol: "$" },
@@ -862,7 +924,6 @@
             });
         }
 
-        // Xavfsiz ochish funksiyalari (data-atributlar orqali ishlaydi)
         function openProductModalFromButton(btn) {
             let card = btn.closest('.product-item');
             openModalFromCard(card);
@@ -980,4 +1041,3 @@
     </script>
 </body>
 </html>
-<!-- xxxx -->

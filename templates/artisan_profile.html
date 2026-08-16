@@ -1,46 +1,39 @@
-<!DOCTYPE html>
-<html lang="uz">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Etnoart — Hunarmandlar</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body class="bg-stone-50 text-stone-800 p-4 max-w-4xl mx-auto space-y-4">
+{% extends "base.html" %}
 
-    <div class="flex items-center space-x-3 mb-6">
-        <span class="text-3xl">👨‍🎨</span>
+{% block title %}Etnoart — Hunarmandlar{% endblock %}
+
+{% block content %}
+<div class="container my-4" style="max-width: 900px;">
+    <div class="d-flex align-items-center gap-3 mb-4">
+        <span style="font-size: 2rem;">👨‍🎨</span>
         <div>
-            <h1 class="text-xl font-bold text-stone-900">Nufuzli Ustalarimiz</h1>
-            <p class="text-xs text-stone-500">O'zbekiston madaniy san'ati vakillari</p>
+            <h2 class="fw-bold m-0">Nufuzli Ustalarimiz</h2>
+            <p class="text-muted m-0 small">O'zbekiston madaniy san'ati vakillari</p>
         </div>
     </div>
 
-    <div class="space-y-3">
+    <div class="d-flex flex-column gap-3">
         {% for a in artisans %}
-        <div class="bg-white p-4 rounded-2xl border border-stone-200/80 shadow-sm flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="w-12 h-12 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-lg border border-amber-200">
+        <div class="card p-3 rounded-4 shadow-sm d-flex flex-row align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-3">
+                <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold text-warning bg-warning-subtle" style="width: 48px; height: 48px; font-size: 1.2rem;">
                     {{ a.name[0] }}
                 </div>
                 <div>
-                    <h3 class="font-bold text-stone-900 text-sm">{{ a.name }}</h3>
-                    <p class="text-xs text-amber-700 font-medium">{{ a.craft_type }} • {{ a.region }}</p>
-                    <p class="text-[11px] text-stone-400 mt-0.5">{{ a.phone }}</p>
+                    <h5 class="fw-bold m-0 fs-6">{{ a.name }}</h5>
+                    <p class="small text-warning-emphasis fw-semibold m-0">{{ a.craft_type }} • {{ a.region }}</p>
+                    <p class="text-muted m-0" style="font-size: 0.75rem;">{{ a.phone }}</p>
                 </div>
             </div>
 
             {% if a.latitude and a.longitude %}
-            <a href="https://www.google.com/maps?q={{ a.latitude }},{{ a.longitude }}" target="_blank" 
-               class="bg-stone-100 hover:bg-stone-200 text-stone-700 p-2.5 rounded-xl text-xs font-semibold flex items-center space-x-1">
-                <i class="fa-solid fa-location-dot text-amber-600"></i>
+            <a href="https://www.google.com/maps?q={{ a.latitude }},{{ a.longitude }}" target="_blank" class="btn btn-light btn-sm rounded-3 fw-semibold d-flex align-items-center gap-1 border">
+                <i class="fa-solid fa-location-dot text-danger"></i>
                 <span>Xarita</span>
             </a>
             {% endif %}
         </div>
         {% endfor %}
     </div>
-
-</body>
-</html>
+</div>
+{% endblock %}

@@ -1,136 +1,136 @@
-<!DOCTYPE html>
-<html lang="uz">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ product.title }} - Etnoart</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
-<body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="/">🎨 Etnoart</a>
-            <a href="/" class="btn btn-outline-light btn-sm">← Bosh sahifaga qaytish</a>
+{% extends "base.html" %}
+
+{% block title %}{{ product.title }} - Etnoart{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <!-- Mahsulot Asosiy Kartasi -->
+    <div class="row card shadow-sm p-4 border-0 flex-row">
+        <div class="col-md-5">
+            <img src="{{ product.image_url }}" class="img-fluid rounded shadow-sm" alt="{{ product.title }}" style="width: 100%; height: 350px; object-fit: cover;">
         </div>
-    </nav>
-
-    <div class="container my-5">
-        <div class="row card shadow-sm p-4 border-0 flex-row">
-            <div class="col-md-5">
-                <img src="{{ product.image_url }}" class="img-fluid rounded shadow-sm" alt="{{ product.title }}" style="width: 100%; height: 350px; object-fit: cover;">
+        <div class="col-md-7 d-flex flex-column justify-content-between ps-md-4 mt-3 mt-md-0">
+            <div>
+                <span class="badge bg-secondary mb-2">{{ product.category }}</span>
+                <h2 class="fw-bold">{{ product.title }}</h2>
+                <p class="text-muted mb-3">
+                    Muallif ustaxonasi: 
+                    <a href="/artisan/{{ product.artisan_id }}" class="text-decoration-none fw-bold text-primary">
+                        <i class="fa fa-user-circle"></i> {{ product.artisan_name }}
+                    </a> 
+                    (📍 {{ product.artisan_region }})
+                </p>
+                <h3 class="text-danger fw-bold mb-3">{{ "%.0f"|format(product.price) }} so'm</h3>
+                <p class="text-secondary">{{ product.description }}</p>
             </div>
-            <div class="col-md-7 d-flex flex-column justify-content-between ps-md-4">
-                <div>
-                    <span class="badge bg-secondary mb-2">{{ product.category }}</span>
-                    <h2>{{ product.title }}</h2>
-                    <p class="text-muted mb-3">Muallif ustaxonasi: <a href="/artisan/{{ product.artisan_id }}" class="text-decoration-none fw-bold text-dark"><i class="fa fa-user-circle"></i> {{ product.artisan_name }}</a> (📍 {{ product.artisan_region }})</p>
-                    <h3 class="text-danger fw-bold mb-3">{{ "%.0f"|format(product.price) }} so'm</h3>
-                    <p class="text-secondary">{{ product.description }}</p>
-                </div>
-                <div class="mt-4">
-                    <button class="btn btn-dark btn-lg w-100 shadow-sm" id="addToCartBtn" onclick="addToCart({{ product.id }}, '{{ product.title }}', {{ product.price }}, '{{ product.image_url }}')">
-                        <i class="fa fa-shopping-bag me-2"></i> Savatga qo'shish
-                    </button>
-                </div>
+            <div class="mt-4">
+                <button class="btn btn-dark btn-lg w-100 shadow-sm" id="addToCartBtn" onclick="addToCart({{ product.id }}, '{{ product.title }}', {{ product.price }}, '{{ product.image_url }}')">
+                    <i class="fa fa-shopping-bag me-2"></i> Savatga qo'shish
+                </button>
             </div>
-        </div>
-
-        <!-- Izohlar va Fikr bildirish -->
-        <div class="card shadow-sm p-4 mt-4 border-0">
-            <h4 class="mb-3">✍️ Mahsulot haqida fikr qoldirish</h4>
-
-            {% if error %}
-            <div class="alert alert-danger d-flex align-items-center" role="alert">
-                <i class="fa fa-exclamation-circle me-2"></i> {{ error }}
-            </div>
-            {% endif %}
-
-            <form action="/product/{{ product.id }}/review" method="post" id="reviewForm">
-                <div class="mb-3">
-                    <label class="form-label">Ismingiz</label>
-                    <input type="text" class="form-control" name="user_name" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Baho</label>
-                    <select class="form-select" name="rating">
-                        <option value="⭐ 5">⭐⭐⭐⭐⭐ (Ajoyib)</option>
-                        <option value="⭐ 4">⭐⭐⭐⭐ (Yaxshi)</option>
-                        <option value="⭐ 3">⭐⭐⭐ (O'rtacha)</option>
-                        <option value="⭐ 2">⭐⭐ (Yomon emas)</option>
-                        <option value="⭐ 1">⭐ (Yomon)</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Izohingiz</label>
-                    <textarea class="form-control" name="comment" rows="3" required></textarea>
-                </div>
-                <button type="submit" class="btn btn-dark" id="reviewSubmitBtn">Fikrni yuborish</button>
-            </form>
-
-            <hr class="my-4">
-            <h5 class="mb-3">Mijozlar sharhlari:</h5>
-            {% for r in reviews %}
-            <div class="border-bottom py-2">
-                <div class="d-flex justify-content-between">
-                    <strong>{{ r.user_name }}</strong> 
-                    <span class="text-warning">{{ r.rating }}</span>
-                </div>
-                <p class="mb-1 text-muted">{{ r.comment }}</p>
-            </div>
-            {% else %}
-            <p class="text-muted">Hozircha sharhlar yo'q. Birinchi bo'lib fikr bildiring!</p>
-            {% endfor %}
         </div>
     </div>
 
-    <!-- Toast bildirishnoma -->
-    <div id="toast" style="position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: #1a1a1a; color: white; padding: 14px 24px; border-radius: 12px; font-weight: 600; box-shadow: 0 8px 24px rgba(0,0,0,0.2); z-index: 9999; opacity: 0; transition: all 0.3s ease; white-space: nowrap;">
-        ✅ Mahsulot savatga qo'shildi!
-    </div>
+    <!-- Izohlar va Fikr bildirish Bo'limi -->
+    <div class="card shadow-sm p-4 mt-4 border-0">
+        <h4 class="mb-3 fw-bold">✍️ Mahsulot haqida fikr qoldirish</h4>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        function showToast() {
-            const toast = document.getElementById('toast');
-            toast.style.opacity = '1';
-            toast.style.transform = 'translateX(-50%) translateY(0)';
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateX(-50%) translateY(100px)';
-            }, 2000);
+        {% if error %}
+        <div class="alert alert-danger d-flex align-items-center" role="alert">
+            <i class="fa fa-exclamation-circle me-2"></i> {{ error }}
+        </div>
+        {% endif %}
+
+        <form action="/product/{{ product.id }}/review" method="post" id="reviewForm">
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Ismingiz</label>
+                <input type="text" class="form-control" name="user_name" placeholder="Ismingizni kiriting" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Baho</label>
+                <select class="form-select" name="rating">
+                    <option value="⭐ 5">⭐⭐⭐⭐⭐ (Ajoyib)</option>
+                    <option value="⭐ 4">⭐⭐⭐⭐ (Yaxshi)</option>
+                    <option value="⭐ 3">⭐⭐⭐ (O'rtacha)</option>
+                    <option value="⭐ 2">⭐⭐ (Yomon emas)</option>
+                    <option value="⭐ 1">⭐ (Yomon)</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Izohingiz</label>
+                <textarea class="form-control" name="comment" rows="3" placeholder="Mahsulot haqida fikringizni yozing..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-dark px-4" id="reviewSubmitBtn">Fikrni yuborish</button>
+        </form>
+
+        <hr class="my-4">
+        
+        <!-- Mijozlar Sharhlari -->
+        <h5 class="mb-3 fw-bold">Mijozlar sharhlari:</h5>
+        {% for r in reviews %}
+        <div class="border-bottom py-3">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+                <strong>{{ r.user_name }}</strong> 
+                <span class="text-warning">{{ r.rating }}</span>
+            </div>
+            <p class="mb-0 text-secondary">{{ r.comment }}</p>
+        </div>
+        {% else %}
+        <p class="text-muted">Hozircha sharhlar yo'q. Birinchi bo'lib fikr bildiring!</p>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Toast bildirishnoma -->
+<div id="toast" style="position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: #1a1a1a; color: white; padding: 14px 24px; border-radius: 12px; font-weight: 600; box-shadow: 0 8px 24px rgba(0,0,0,0.2); z-index: 9999; opacity: 0; transition: all 0.3s ease; white-space: nowrap;">
+    ✅ Mahsulot savatga qo'shildi!
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Toast xabarini ko'rsatish
+    function showToast() {
+        const toast = document.getElementById('toast');
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateX(-50%) translateY(0)';
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateX(-50%) translateY(100px)';
+        }, 2000);
+    }
+
+    // Savatga mahsulot qo'shish (LocalStorage)
+    function addToCart(id, title, price, image) {
+        let cart = JSON.parse(localStorage.getItem('etno_cart')) || [];
+        let item = cart.find(i => i.id === id);
+        if (item) {
+            item.quantity += 1;
+        } else {
+            cart.push({ id, title, price, quantity: 1, image });
         }
+        localStorage.setItem('etno_cart', JSON.stringify(cart));
+        showToast();
 
-        function addToCart(id, title, price, image) {
-            let cart = JSON.parse(localStorage.getItem('etno_cart')) || [];
-            let item = cart.find(i => i.id === id);
-            if (item) {
-                item.quantity += 1;
-            } else {
-                cart.push({ id, title, price, quantity: 1, image });
-            }
-            localStorage.setItem('etno_cart', JSON.stringify(cart));
-            showToast();
+        // Tugma holatini o'zgartirish
+        const btn = document.getElementById('addToCartBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fa fa-check me-2"></i> Qo\'shildi!';
+        btn.disabled = true;
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }, 1500);
+    }
 
-            // Tugmani vaqtincha "qo'shildi" holatiga o'tkazish
-            const btn = document.getElementById('addToCartBtn');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fa fa-check me-2"></i> Qo\'shildi!';
+    // Sharh yuborishda yuklanish (Loading) holati
+    const reviewForm = document.getElementById('reviewForm');
+    if (reviewForm) {
+        reviewForm.addEventListener('submit', function() {
+            const btn = document.getElementById('reviewSubmitBtn');
             btn.disabled = true;
-            setTimeout(() => {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            }, 1500);
-        }
-
-        // Sharh formasini yuborishda loading holati
-        const reviewForm = document.getElementById('reviewForm');
-        if (reviewForm) {
-            reviewForm.addEventListener('submit', function() {
-                const btn = document.getElementById('reviewSubmitBtn');
-                btn.disabled = true;
-                btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Yuborilmoqda...';
-            });
-        }
-    </script>
-</body>
-</html>
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Yuborilmoqda...';
+        });
+    }
+</script>
+{% endblock %}
