@@ -20,7 +20,12 @@
                     </a> 
                     (📍 {{ product.artisan_region }})
                 </p>
-                <h3 class="text-danger fw-bold mb-3">{{ "%.0f"|format(product.price) }} so'm</h3>
+                
+                <!-- O'ZGARTIRILGAN QATOR: Live valyuta o'zgarishi uchun attributes qo'shildi -->
+                <h3 class="text-danger fw-bold mb-3 product-price" data-price-uzs="{{ product.price }}">
+                    {{ "%.0f"|format(product.price) }} so'm
+                </h3>
+
                 <p class="text-secondary">{{ product.description }}</p>
             </div>
             <div class="mt-4">
