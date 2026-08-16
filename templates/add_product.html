@@ -113,23 +113,15 @@
             border-color: var(--etsy-orange);
         }
 
-        select {
-            width: 100% !important;
-            height: 48px !important;
-            padding: 0 12px !important;
-            border-radius: 12px !important;
-            border: 1px solid #ccc !important;
-            background-color: #ffffff !important;
-            color: #1a1a1a !important;
-            font-size: 15px !important;
-            outline: none;
-            display: block;
+        /* Hunarmand nomi uchun input + datalist (ro'yxatdan tanlash yoki qo'lda yozish) */
+        input[list] {
+            cursor: text;
         }
 
-        select option {
-            color: #1a1a1a;
-            background-color: #ffffff;
-            padding: 10px;
+        .hint-text {
+            font-size: 12px;
+            color: var(--hint-color);
+            margin-top: 4px;
         }
 
         textarea {
@@ -259,13 +251,15 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="artisan_id">Hunarmandni tanlang:</label>
-                    <select id="artisan_id" name="artisan_id" required>
-                        <option value="" disabled selected>Hunarmandni tanlang...</option>
+                    <label for="artisan_name">Hunarmand:</label>
+                    <input type="text" id="artisan_name" name="artisan_name" list="artisan_list"
+                           placeholder="Ro'yxatdan tanlang yoki yangi ism yozing" required autocomplete="off">
+                    <datalist id="artisan_list">
                         {% for artisan in artisans %}
-                            <option value="{{ artisan['id'] }}">{{ artisan['name'] }}</option>
+                            <option value="{{ artisan['name'] }}">
                         {% endfor %}
-                    </select>
+                    </datalist>
+                    <div class="hint-text">Mavjud hunarmandni tanlashingiz yoki yangi ism kiritishingiz mumkin</div>
                 </div>
 
                 <div class="form-group">

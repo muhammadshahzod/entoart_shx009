@@ -27,7 +27,7 @@ google = oauth.register(
 )
 
 ADMIN_EMAILS = ["temurbektursunov059@gmail.com",
-                "muhammadshahzod02@gmail.com"]
+                "muhammadshahzod09@gmail.com"]
 
 def login_required(f):
     @wraps(f)
@@ -208,7 +208,7 @@ def add_product():
     market_price = request.form.get("market_price")
     market_price = float(market_price) if market_price else None
     description = request.form.get("description")
-    artisan_id = int(request.form.get("artisan_id", 1))
+    artisan_name = request.form.get("artisan_name", "").strip()
 
     image = request.files.get("image")
     image_url = ""
@@ -219,6 +219,20 @@ def add_product():
         image_url = f"/static/uploads/{filename}"
 
     conn = get_db_connection()
+
+    # Hunarmand nomi bo'yicha bazada mavjudligini tekshirish
+    existing_artisan = conn.execute(
+        "SELECT id FROM artisans WHERE name = ?", (artisan_name,)
+    ).fetchone()
+
+    if existing_artisan:
+        artisan_id = existing_artisan["id"]
+    else:
+        cursor = conn.execute(
+            "INSERT INTO artisans (name) VALUES (?)", (artisan_name,)
+        )
+        artisan_id = cursor.lastrowid
+
     conn.execute(
         """INSERT INTO products (title, category, price, market_price, description, artisan_id, image_url)
             VALUES (?, ?, ?, ?, ?, ?, ?)""",
