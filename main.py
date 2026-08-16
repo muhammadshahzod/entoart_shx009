@@ -27,7 +27,7 @@ google = oauth.register(
 )
 
 ADMIN_EMAILS = ["temurbektursunov059@gmail.com",
-                "muhammadshahzod09@gmail.com"]
+                "muhammadshahzod02@gmail.com"]
 
 def login_required(f):
     @wraps(f)
