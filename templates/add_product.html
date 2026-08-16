@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yangi mahsulot qo'shish - EtnoArt</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg-color: var(--telegram-bg-color, #f4f6f8);
+            --card-bg: var(--telegram-secondary-bg-color, #ffffff);
+            --text-color: var(--telegram-text-color, #1a1a1a);
+            --hint-color: var(--telegram-hint-color, #8e8e93);
+            --button-color: var(--telegram-button-color, #2e7d32);
+            --button-text-color: var(--telegram-button-text-color, #ffffff);
+            --etsy-orange: #f1641e;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding-bottom: 40px;
+        }
+
+        .header {
+            background-color: #ffffff;
+            border-bottom: 1px solid #e1e3de;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .back-btn {
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #222222;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .logo {
+            font-family: 'Georgia', serif;
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--etsy-orange);
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 0 16px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        h1 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-color);
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid #ccc;
+            background: var(--card-bg);
+            color: var(--text-color);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        textarea:focus {
+            border-color: var(--etsy-orange);
+        }
+
+        select {
+            width: 100% !important;
+            height: 48px !important;
+            padding: 0 12px !important;
+            border-radius: 12px !important;
+            border: 1px solid #ccc !important;
+            background-color: #ffffff !important;
+            color: #1a1a1a !important;
+            font-size: 15px !important;
+            outline: none;
+            display: block;
+        }
+
+        select option {
+            color: #1a1a1a;
+            background-color: #ffffff;
+            padding: 10px;
+        }
+
+        textarea {
+            resize: vertical;
+            height: 100px;
+        }
+
+        /* Fayl yuklash dizayni va rasm oldindan ko'rsatish bloki */
+        .file-upload-container {
+            border: 2px dashed #ccc;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            background: #fafafa;
+            cursor: pointer;
+            position: relative;
+            transition: 0.2s;
+        }
+
+        .file-upload-container:hover {
+            border-color: var(--etsy-orange);
+            background: #fff5f2;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-upload-label {
+            font-size: 14px;
+            color: var(--hint-color);
+            cursor: pointer;
+            display: block;
+        }
+
+        .preview-box {
+            margin-top: 12px;
+            display: none;
+            text-align: center;
+        }
+
+        .preview-box img {
+            max-width: 100%;
+            max-height: 180px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 1px solid #ddd;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: var(--button-color);
+            color: var(--button-text-color);
+            border: none;
+            padding: 14px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 10px;
+            text-align: center;
+            transition: opacity 0.2s;
+        }
+
+        .submit-btn:hover {
+            opacity: 0.9;
+        }
+
+        .submit-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255,255,255,0.4);
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <a href="/admin" class="back-btn">← Orqaga</a>
+        <a href="/" class="logo">EtnoArt</a>
+        <div style="width: 60px;"></div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h1>Yangi mahsulot qo'shish</h1>
+            <form action="/admin/add-product" method="POST" enctype="multipart/form-data" id="addProductForm">
+                
+                <div class="form-group">
+                    <label for="title">Mahsulot nomi:</label>
+                    <input type="text" id="title" name="title" placeholder="Masalan: Qo'lda to'qilgan gilam" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Kategoriyasi:</label>
+                    <input type="text" id="category" name="category" placeholder="Masalan: suvenir, kiyim, idish" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="price">Narxi (so'mda):</label>
+                    <input type="number" id="price" name="price" step="any" placeholder="150000" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="market_price">Eski / Bozordagi narxi (ixtiyoriy):</label>
+                    <input type="number" id="market_price" name="market_price" step="any" placeholder="200000">
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Tavsifi:</label>
+                    <textarea id="description" name="description" placeholder="Mahsulot haqida batafsil ma'lumot yozing..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="artisan_id">Hunarmandni tanlang:</label>
+                    <select id="artisan_id" name="artisan_id" required>
+                        <option value="" disabled selected>Hunarmandni tanlang...</option>
+                        {% for artisan in artisans %}
+                            <option value="{{ artisan['id'] }}">{{ artisan['name'] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="image">Mahsulot rasmi:</label>
+                    <div class="file-upload-container" onclick="document.getElementById('image').click();">
+                        <span class="file-upload-label" id="file-label">📂 Rasm yuklash uchun shu yerni bosing</span>
+                        <input type="file" id="image" name="image" accept="image/*" required onchange="previewImage(event)">
+                    </div>
+                    <div class="preview-box" id="previewBox">
+                        <img id="imagePreview" src="#" alt="Tanlangan rasm">
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">Mahsulotni saqlash</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const tg = window.Telegram?.WebApp;
+        if (tg) {
+            tg.ready();
+            tg.expand();
+        }
+
+        // Yuklangan rasmni formaning o'zida ko'rsatib turish funksiyasi
+        function previewImage(event) {
+            const file = event.target.files[0];
+            const previewBox = document.getElementById('previewBox');
+            const imagePreview = document.getElementById('imagePreview');
+            const fileLabel = document.getElementById('file-label');
+
+            if (file) {
+                fileLabel.textContent = "✅ Tanlandi: " + file.name;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    previewBox.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Forma yuborilganda "saqlanmoqda" holatini ko'rsatish
+        document.getElementById('addProductForm').addEventListener('submit', function() {
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span>Saqlanmoqda...';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="siteTitle">Etnoart — Exclusive Uzbek Artisan Marketplace</title>
+    
+    <!-- Flask uchun to'g'rilangan CSS yo'li -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=2">
+    
+    <!-- Bootstrap 5.3 & FontAwesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap Icons (Kvadratlarni to'g'rilash uchun) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        :root {
+            --bg-primary: #f5f2eb;
+            --surface-color: #ffffff;
+            --text-main: #181818;
+            --accent-color: #8b3a17;
+            --accent-hover: #6d2c10;
+            --border-subtle: #e8e1d1;
+            --gold-accent: #b8860b;
+            --shadow-subtle: 0 10px 30px rgba(0, 0, 0, 0.03);
+            --shadow-hover: 0 20px 45px rgba(139, 58, 23, 0.08);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            overflow-x: hidden;
+            animation: fadeInBody 0.5s ease-in-out;
+        }
+
+        @keyframes fadeInBody {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Glassmorphism Navbar */
+        .navbar-custom {
+            background: rgba(245, 242, 235, 0.85) !important;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-subtle);
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand {
+            letter-spacing: -0.5px;
+            font-size: 1.4rem;
+        }
+
+        /* Etsy Style Categories Dropdown Menu */
+        .dropdown-menu-custom {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            padding: 12px 0;
+            margin-top: 12px;
+            min-width: 280px;
+            background: #ffffff;
+            animation: dropdownFade 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .dropdown-item {
+            padding: 12px 24px;
+            font-weight: 500;
+            color: #444;
+            transition: all 0.2s ease;
+        }
+        .dropdown-item:hover {
+            background-color: #fcf9f2;
+            color: var(--accent-color);
+            padding-left: 28px;
+        }
+
+        @keyframes dropdownFade {
+            from { opacity: 0; transform: translateY(10px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* Premium Search Box */
+        .search-container .form-control {
+            background-color: #ffffff;
+            border: 1px solid var(--border-subtle);
+            padding: 14px 22px;
+            font-size: 0.95rem;
+            box-shadow: var(--shadow-subtle);
+            transition: all 0.3s ease;
+            border-radius: 50rem 0 0 50rem !important;
+        }
+        .search-container .form-control:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 4px 25px rgba(139, 58, 23, 0.1);
+            background-color: #ffffff;
+        }
+        .search-container .btn {
+            border-radius: 0 50rem 50rem 0 !important;
+            padding-inline: 24px;
+            transition: background 0.2s;
+        }
+
+        /* Hero Banner with Rich Gradient */
+        .hero-banner {
+            background: linear-gradient(135deg, #181818 0%, #2c2421 100%);
+            border-radius: 32px;
+            color: #ffffff;
+            padding: 65px 55px;
+            margin-bottom: 50px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+            animation: slideUpHero 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes slideUpHero {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hero-banner::before {
+            content: "";
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            background: radial-gradient(circle at 85% 20%, rgba(139, 58, 23, 0.35) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .hero-badge {
+            background: rgba(139, 58, 23, 0.3);
+            color: #ffb19a;
+            border: 1px solid rgba(139, 58, 23, 0.5);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* Product Cards & Micro-interactions */
+        .product-card {
+            border: none;
+            border-radius: 24px;
+            background: var(--surface-color);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: var(--shadow-subtle);
+            animation: fadeInCard 0.5s ease both;
+        }
+        @keyframes fadeInCard {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover) !important;
+        }
+        .product-img-wrapper {
+            height: 260px;
+            overflow: hidden;
+            border-top-left-radius: 24px;
+            border-top-right-radius: 24px;
+            background: #ede6d6;
+        }
+        .product-img-wrapper img {
+            transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .product-card:hover .product-img-wrapper img {
+            transform: scale(1.08);
+        }
+
+        /* Buttons & Actions */
+        .btn-elite-dark {
+            background: #181818;
+            color: white;
+            border-radius: 14px;
+            font-weight: 600;
+            transition: all 0.25s ease;
+        }
+        .btn-elite-dark:hover {
+            background: var(--accent-color);
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(139, 58, 23, 0.25);
+        }
+
+        .wishlist-icon-btn {
+            width: 42px;
+            height: 42px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(6px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: none;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 3;
+        }
+        .wishlist-icon-btn:hover {
+            transform: scale(1.15);
+        }
+
+        /* Modals Modern Glass & Smooth Scale */
+        .modal-content {
+            border: none;
+            border-radius: 28px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+            background: var(--surface-color);
+            animation: modalScaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes modalScaleUp {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        /* Toast Notification Container */
+        #toast-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 9999;
+        }
+        .custom-toast {
+            background: #181818;
+            color: white;
+            padding: 16px 26px;
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            animation: slideInToast 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            font-size: 0.95rem;
+            border-left: 4px solid var(--accent-color);
+        }
+        @keyframes slideInToast {
+            from { transform: translateX(110%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Custom Form Inputs */
+        .form-control, .form-select {
+            border-radius: 14px !important;
+            border: 1px solid var(--border-subtle);
+            padding: 12px 18px;
+            transition: all 0.25s ease;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 4px rgba(139, 58, 23, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Yashirin inputlarni BODY ichiga o'tkazildi -->
+    <input type="hidden" id="viewProductId">
+    <input type="hidden" id="reviewProductId">
+<!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-custom sticky-top py-3">
+        <div class="container">
+            <a>
+                <span class="fw-bold tracking-tight">ETNOART</span>
+            </a>
+
+            <!-- Etsy Style Categories Dropdown Button -->
+            <div class="dropdown me-3 d-none d-lg-block">
+                <button class="btn btn-light rounded-pill px-4 py-2.5 fw-bold border-0 shadow-sm d-flex align-items-center gap-2 dropdown-toggle bg-white" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="categoriesBtnText">
+                    <i class="fa fa-bars text-secondary"></i> Kategoriyalar
+                </button>
+                <ul class="dropdown-menu dropdown-menu-custom">
+                    <li><a class="dropdown-item" href="/" data-translate="all_items"><i class="fa fa-th-large me-2 text-muted"></i> Barcha buyumlar</a></li>
+                    <li><hr class="dropdown-divider my-1 opacity-50"></li>
+                    <li><a class="dropdown-item" href="/?cat=Kulolchilik">🏺 Kulolchilik va Sozlash</a></li>
+                    <li><a class="dropdown-item" href="/?cat=To'qimachilik">🧶 To'qimachilik va Suzane</a></li>
+                    <li><a class="dropdown-item" href="/?cat=Zargarlik">💍 Zargarlik va Taqinchoqlar</a></li>
+                    <li><a class="dropdown-item" href="/?cat=Gilam va Pichoqlar">🗡 Gilam, Pichoq va Yog'och</a></li>
+                    <li><a class="dropdown-item" href="/?cat=Milliy suvenirlar">🎁 Milliy Suvenirlar va O'yinchoqlar</a></li>
+                    <li><a class="dropdown-item" href="/?cat=San'at va naqshlar">🖼 Naqqoshlik va Rassomchilik</a></li>
+                </ul>
+            </div>
+            
+            <form class="d-none d-md-flex mx-auto search-container flex-grow-1 me-3" action="/" method="get">
+                <div class="input-group">
+                    <input class="form-control border-end-0 ps-4" type="search" name="search" id="searchInput" placeholder="Noyob qo'l mehnati buyumlarini qidiring..." value="{{ search or '' }}">
+                    <button class="btn btn-outline-secondary border-start-0 bg-white text-dark shadow-none" type="submit"><i class="fa fa-search"></i></button>
+                </div>
+            </form>
+
+            <div class="d-flex align-items-center gap-2">
+                <!-- Sayt tili selectori (UZ, EN, RU) -->
+                <select id="langSelect" class="form-select form-select-sm rounded-pill px-3 border-0 bg-white shadow-sm fw-semibold" style="width: 85px;" onchange="changeLanguage()">
+                    <option value="uz">UZ</option>
+                    <option value="en">EN</option>
+                    <option value="ru">RU</option>
+                </select>
+
+                <!-- Valyuta selectori (UZS, USD, RUB, CNY) -->
+                <select id="currencySelect" class="form-select form-select-sm rounded-pill px-2 border-0 bg-white shadow-sm fw-semibold" style="width: 105px;" onchange="changeCurrency()">
+                    <option value="UZS">UZS (so'm)</option>
+                    <option value="USD">USD ($)</option>
+                    <option value="RUB">RUB (₽)</option>
+                    <option value="CNY">CNY (¥)</option>
+                </select>
+
+                <button class="btn btn-light rounded-pill position-relative px-3 py-2 shadow-sm d-flex align-items-center gap-2 border-0 bg-white" data-bs-toggle="modal" data-bs-target="#wishlistModal" onclick="updateWishlistUI()">
+                    <i class="fa fa-heart text-danger fs-5"></i>
+                    <span id="wishlistBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 10px;">0</span>
+                </button>
+
+                <button class="btn btn-light rounded-pill position-relative px-3 py-2 shadow-sm d-flex align-items-center gap-2 border-0 bg-white" data-bs-toggle="modal" data-bs-target="#cartModal">
+                    <i class="fa fa-shopping-bag text-dark fs-5"></i>
+                    <span id="cartBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark" style="font-size: 10px;">0</span>
+                </button>
+
+                {% if session.get('user') %}
+                <!-- Foydalanuvchi kirgan bo'lsa -->
+                <div class="dropdown">
+                 <button class="btn btn-light rounded-pill px-3 py-2 shadow-sm fw-bold border-0 bg-white dropdown-toggle d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown">
+                    <img src="{{ session['user']['picture'] }}" alt="avatar" class="rounded-circle" width="20" height="20">
+                    {{ session['user']['name'] }}
+                </button>
+                <ul class="dropdown-menu shadow border-0">
+                    <li><a class="dropdown-item text-danger" href="/logout">Chiqish</a></li>
+                     </ul>
+                      </div>
+                      {% else: %}
+                      <!-- Kirilmagan bo'lsa -->
+                      <a href="/login/google" class="btn btn-light rounded-pill px-3 py-2 shadow-sm fw-bold border-0 bg-white d-flex align-items-center gap-2 text-dark text-decoration-none">
+                        <i class="fa-regular fa-user text-dark"></i> Kirish
+                    </a>
+                    {% endif %}
+
+                <a href="/admin" class="btn btn-dark btn-sm rounded-pill px-3 py-2 fw-bold shadow-sm d-none d-lg-block" data-translate="admin">Admin</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-4">
+        <!-- Hero Banner -->
+        <div class="hero-banner">
+            <div class="row align-items-center">
+                <div class="col-lg-7">
+                    <span class="badge hero-badge px-3.5 py-2 rounded-pill mb-3" data-translate="hero_badge">100% Qo'l Mehnati va Hunarmandchilik</span>
+                    <h1 class="fw-extrabold display-5 mb-3" style="letter-spacing: -1px;" data-translate="hero_title">O'zbekistonning chinakam san'at durdonalari</h1>
+                    <p class="text-white-50 fs-6 mb-4 lead" style="font-weight: 300;" data-translate="hero_desc">Har bir buyum ustaning qo'lida maxsus ishlangan bo'lib, uning takrorlanmas tarixi mavjud.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Joriy tanlangan kategoriya sarlavhasi -->
+        {% if selected_category %}
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="fw-bold m-0">📁 Kategoriya: {{ selected_category }}</h3>
+            <a href="/" class="btn btn-outline-dark btn-sm rounded-pill px-3" data-translate="back_all">Barchasiga qaytish</a>
+        </div>
+        {% endif %}
+
+        <!-- Products Grid -->
+        <div class="row g-4">
+            {% for p in products %}
+            <div class="col-xl-3 col-lg-4 col-md-6">
+                <!-- Product Card with Data Attributes for safety -->
+                <div class="card product-card h-100 position-relative product-item"
+                     data-id="{{ p.id }}"
+                     data-title="{{ p.title | e }}"
+                     data-price="{{ p.price }}"
+                     data-image="{{ p.image_url }}"
+                     data-description="{{ p.description | default('Ma`lumot berilmagan') | e }}"
+                     data-artisan="{{ p.artisan_name | default('Hunarmand') | e }}">
+                     
+                    <button class="wishlist-icon-btn position-absolute top-0 end-0 m-3 wishlist-btn-{{ p.id }}" onclick="toggleWishlist({{ p.id }}, '{{ p.title | e }}', {{ p.price }}, '{{ p.image_url }}', this)">
+                        <i class="fa-regular fa-heart text-danger fs-5"></i>
+                    </button>
+                    <div class="product-img-wrapper" style="cursor: pointer;" onclick="openProductModalFromElement(this)">
+                        <img src="{{ p.image_url }}" class="w-100 h-100" style="object-fit: cover;" alt="{{ p.title }}">
+                    </div>
+                    <div class="card-body d-flex flex-column p-4">
+                        <small class="text-muted mb-2 fw-semibold">
+                            <span class="text-decoration-none text-muted"><i class="fa fa-user-circle me-1 text-secondary"></i> {{ p.artisan_name }}</span>
+                        </small>
+                        <h5 class="card-title fw-bold text-dark mb-2 fs-6" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 44px;">{{ p.title }}</h5>
+                        <div class="mb-4 mt-auto">
+                            <span class="text-dark fw-extrabold fs-5 price-tag" data-price="{{ p.price }}">{{ "%.0f"|format(p.price) }} so'm</span>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-outline-dark btn-sm w-50 rounded-pill py-2 fw-semibold border-2" onclick="openProductModalFromButton(this)" data-translate="view_btn">Ko'rish</button>
+                            <button class="btn btn-elite-dark btn-sm w-50 rounded-pill py-2" onclick="addToCart({{ p.id }}, '{{ p.title | e }}', {{ p.price }}, '{{ p.image_url }}')" data-translate="cart_btn">Savatga</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="col-12 text-center py-5">
+                <div class="py-5">
+                    <i class="fa fa-box-open fs-1 text-muted mb-3"></i>
+                    <h4 class="text-muted fw-semibold" data-translate="no_products">Bu kategoriyada hozircha mahsulotlar yo'q</h4>
+                    <p class="text-muted small" data-translate="no_products_desc">Tez orada hunarmandlarimiz tomonidan yangi qo'l mehnati mahsulotlari qo'shiladi.</p>
+                    <a href="/" class="btn btn-dark rounded-pill px-4 mt-2" data-translate="view_all">Barcha mahsulotlarni ko'rish</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Product Quick View Modal -->
+    <div class="modal fade" id="productViewModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content p-3">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold" id="viewProductName">Mahsulot tafsiloti</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="row align-items-center mb-4">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <img id="viewProductImg" src="" class="w-100 rounded-4 shadow-sm" style="height: 280px; object-fit: cover;">
+                        </div>
+                        <div class="col-md-6">
+                            <p class="text-muted mb-1"><i class="fa fa-user-circle me-1"></i> <span id="viewProductArtisan"></span></p>
+                            <h3 id="viewProductPrice" class="text-danger fw-extrabold mb-3"></h3>
+                            <p id="viewProductDesc" class="text-muted small mb-4" style="line-height: 1.6;"></p>
+                            <button id="viewProductCartBtn" class="btn btn-elite-dark w-100 py-3 rounded-pill fw-bold shadow-sm" data-translate="cart_btn">Savatga qo'shish</button>
+                        </div>
+                    </div>
+
+                    <hr class="my-4 opacity-50">
+
+                    <h5 class="fw-bold mb-3 fs-6" data-translate="reviews_title">💬 Xaridorlarning fikrlari va baholari</h5>
+                    <div id="productReviewsList" class="mb-4" style="max-height: 180px; overflow-y: auto;"></div>
+
+                    <form id="reviewForm" onsubmit="submitReview(event)" class="bg-light p-3.5 rounded-4 border">
+                        <input type="hidden" id="reviewProductId">
+                        <h6 class="fw-semibold small mb-2 text-muted" data-translate="leave_review">Siz ham o'z bahongizni qoldiring:</h6>
+                        <div class="row g-2">
+                            <div class="col-md-4">
+                                <input type="text" id="reviewerName" class="form-control form-control-sm bg-white" placeholder="Ismingiz" data-translate-placeholder="name_placeholder" required>
+                            </div>
+                            <div class="col-md-4">
+                                <select id="reviewRating" class="form-select form-select-sm bg-white">
+                                    <option value="5">⭐⭐⭐⭐⭐ (5 - A'lo)</option>
+                                    <option value="4">⭐⭐⭐⭐ (4 - Yaxshi)</option>
+                                    <option value="3">⭐⭐⭐ (3 - Qoniqarli)</option>
+                                    <option value="2">⭐⭐ (2 - Yomon)</option>
+                                    <option value="1">⭐ (1 - Juda yomon)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <button type="submit" class="btn btn-dark btn-sm w-100 rounded-pill py-2 fw-semibold" data-translate="send_btn">Yuborish</button>
+                            </div>
+                            <div class="col-12 mt-2">
+                                <textarea id="reviewText" class="form-control form-control-sm bg-white" rows="2" placeholder="Fikringizni yozing..." data-translate-placeholder="comment_placeholder" required></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Wishlist Modal -->
+    <div class="modal fade" id="wishlistModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-2">
+                <div class="modal-header border-0 pb-0 px-4 pt-4">
+                    <h5 class="modal-title fw-bold" data-translate="wishlist_title">❤️ Sevimli Buyumlar</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div id="wishlistItemsList" class="list-group list-group-flush"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="modal fade" id="cartModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content p-3">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold" data-translate="cart_title">🛍 Savatcha va Buyurtma</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="row">
+                        <div class="col-md-6 border-end pe-md-4 mb-4 mb-md-0 border-opacity-25">
+                            <h6 class="fw-bold mb-3 text-muted" data-translate="selected_products">Tanlangan mahsulotlar</h6>
+                            <div id="cartItemsList" class="list-group list-group-flush mb-3" style="max-height: 250px; overflow-y: auto;"></div>
+                            <div class="d-flex justify-content-between align-items-center p-3 bg-light rounded-4 border">
+                                <span class="fw-semibold text-muted" data-translate="total_price">Jami to'lov:</span>
+                                <h4 class="fw-bold mb-0 text-dark"><span id="cartTotal">0</span> <span id="currencyUnitText">so'm</span></h4>
+                            </div>
+                        </div>
+                        <div class="col-md-6 ps-md-4">
+                            <form id="checkoutForm" onsubmit="submitOrder(event)">
+                                <h6 class="fw-bold mb-3 text-muted" data-translate="delivery_details">Yetkazib berish tafsilotlari</h6>
+                                <div class="mb-3">
+                                    <input type="text" class="form-control bg-light" id="userName" placeholder="Ism familiyangiz" data-translate-placeholder="fullname_placeholder" required>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="text" class="form-control bg-light" id="userPhone" placeholder="Telefon raqam (+9989...)" data-translate-placeholder="phone_placeholder" required>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="text" class="form-control bg-light" id="userAddress" placeholder="Manzil (Shahar, ko'cha, uy)" data-translate-placeholder="address_placeholder" required>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label small text-muted fw-semibold" data-translate="payment_type">To'lov turi va holati</label>
+                                    <select class="form-select bg-light" id="paymentMethod">
+                                        <option value="Click / Payme (Kutilmoqda)" data-translate="pay_1">Click / Payme (Onlayn - To'lov kutilmoqda)</option>
+                                        <option value="Uzum Pay (Kutilmoqda)" data-translate="pay_2">Uzum Pay (To'lov kutilmoqda)</option>
+                                        <option value="Kuryerga Naqd pulda (Yetkazilganda)" data-translate="pay_3">Kuryerga Naqd pulda (To'lanmagan)</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-elite-dark w-100 py-3 rounded-pill fw-bold shadow-sm" data-translate="checkout_btn">Buyurtmani Rasmiylashtirish</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap & Custom JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Tarjimalar lug'ati (UZ, EN, RU)
+        const translations = {
+            uz: {
+                site_title: "Etnoart — Eksklyuziv O'zbek Hunarmandchilik bozori",
+                categories: "Kategoriyalar",
+                all_items: "Barcha buyumlar",
+                search_placeholder: "Noyob qo'l mehnati buyumlarini qidiring...",
+                admin: "Admin",
+                hero_badge: "100% Qo'l Mehnati va Hunarmandchilik",
+                hero_title: "O'zbekistonning chinakam san'at durdonalari",
+                hero_desc: "Har bir buyum ustaning qo'lida maxsus ishlangan bo'lib, uning takrorlanmas tarixi mavjud.",
+                back_all: "Barchasiga qaytish",
+                view_btn: "Ko'rish",
+                cart_btn: "Savatga",
+                no_products: "Bu kategoriyada hozircha mahsulotlar yo'q",
+                no_products_desc: "Tez orada hunarmandlarimiz tomonidan yangi qo'l mehnati mahsulotlari qo'shiladi.",
+                view_all: "Barcha mahsulotlarni ko'rish",
+                reviews_title: "💬 Xaridorlarning fikrlari va baholari",
+                leave_review: "Siz ham o'z bahongizni qoldiring:",
+                name_placeholder: "Ismingiz",
+                comment_placeholder: "Fikringizni yozing...",
+                send_btn: "Yuborish",
+                wishlist_title: "❤️ Sevimli Buyumlar",
+                cart_title: "🛍 Savatcha va Buyurtma",
+                selected_products: "Tanlangan mahsulotlar",
+                total_price: "Jami to'lov:",
+                delivery_details: "Yetkazib berish tafsilotlari",
+                fullname_placeholder: "Ism familiyangiz",
+                phone_placeholder: "Telefon raqam (+9989...)",
+                address_placeholder: "Manzil (Shahar, ko'cha, uy)",
+                payment_type: "To'lov turi va holati",
+                pay_1: "Click / Payme (Onlayn - To'lov kutilmoqda)",
+                pay_2: "Uzum Pay (To'lov kutilmoqda)",
+                pay_3: "Kuryerga Naqd pulda (To'lanmagan)",
+                checkout_btn: "Buyurtmani Rasmiylashtirish",
+                toast_cart: "Mahsulot savatchaga qo'shildi!",
+                toast_review: "Izohingiz va bahoingiz muvaffaqiyatli saqlandi! ✨",
+                toast_order: "Buyurtmangiz muvaffaqiyatli qabul qilindi! 🎉"
+            },
+            en: {
+                site_title: "Etnoart — Exclusive Uzbek Artisan Marketplace",
+                categories: "Categories",
+                all_items: "All items",
+                search_placeholder: "Search unique handmade items...",
+                admin: "Admin",
+                hero_badge: "100% Handmade & Craftsmanship",
+                hero_title: "True masterpieces of Uzbek art",
+                hero_desc: "Each item is specially crafted by the master's hand and has a unique history.",
+                back_all: "Back to all",
+                view_btn: "View",
+                cart_btn: "Add to Cart",
+                no_products: "No products in this category yet",
+                no_products_desc: "New handmade products will be added by our artisans soon.",
+                view_all: "View all products",
+                reviews_title: "💬 Customer Reviews and Ratings",
+                leave_review: "Leave your review and rating:",
+                name_placeholder: "Your name",
+                comment_placeholder: "Write your opinion...",
+                send_btn: "Submit",
+                wishlist_title: "❤️ Wishlist",
+                cart_title: "🛍 Cart & Order",
+                selected_products: "Selected products",
+                total_price: "Total price:",
+                delivery_details: "Delivery details",
+                fullname_placeholder: "Full name",
+                phone_placeholder: "Phone number (+9989...)",
+                address_placeholder: "Address (City, street, house)",
+                payment_type: "Payment type and status",
+                pay_1: "Click / Payme (Online - Pending)",
+                pay_2: "Uzum Pay (Pending)",
+                pay_3: "Cash on delivery (Unpaid)",
+                checkout_btn: "Place Order",
+                toast_cart: "Product added to cart!",
+                toast_review: "Your review and rating successfully saved! ✨",
+                toast_order: "Your order has been successfully placed! 🎉"
+            },
+            ru: {
+                site_title: "Etnoart — Эксклюзивный рынок узбекских ремесел",
+                categories: "Категории",
+                all_items: "Все товары",
+                search_placeholder: "Ищите уникальные изделия ручной работы...",
+                admin: "Админ",
+                hero_badge: "100% Ручная работа и ремесло",
+                hero_title: "Подлинные шедевры узбекского искусства",
+                hero_desc: "Каждое изделие создано вручную мастером и имеет свою неповторимую историю.",
+                back_all: "Назад ко всем",
+                view_btn: "Смотреть",
+                cart_btn: "В корзину",
+                no_products: "В этой категории пока нет товаров",
+                no_products_desc: "Скоро наши ремесленники добавят новые работы.",
+                view_all: "Смотреть все товары",
+                reviews_title: "💬 Отзывы и оценки покупателей",
+                leave_review: "Оставьте свой отзыв и оценку:",
+                name_placeholder: "Ваше имя",
+                comment_placeholder: "Напишите ваше мнение...",
+                send_btn: "Отправить",
+                wishlist_title: "❤️ Избранное",
+                cart_title: "🛍 Корзина и Заказ",
+                selected_products: "Выбранные товары",
+                total_price: "Итого к оплате:",
+                delivery_details: "Детали доставки",
+                fullname_placeholder: "ФИО",
+                phone_placeholder: "Номер телефона (+9989...)",
+                address_placeholder: "Адрес (Город, улица, дом)",
+                payment_type: "Способ и статус оплаты",
+                pay_1: "Click / Payme (Онлайн - Ожидается)",
+                pay_2: "Uzum Pay (Ожидается оплата)",
+                pay_3: "Наличными курьеру (Не оплачено)",
+                checkout_btn: "Оформить заказ",
+                toast_cart: "Товар добавлен в корзину!",
+                toast_review: "Ваш отзыв и оценка успешно сохранены! ✨",
+                toast_order: "Ваш заказ успешно принят! 🎉"
+            }
+        };
+
+        // Valyuta kurslari va belgilari
+        const currencies = {
+            UZS: { rate: 1, symbol: "so'm" },
+            USD: { rate: 12800, symbol: "$" },
+            RUB: { rate: 135, symbol: "₽" },
+            CNY: { rate: 1750, symbol: "¥" }
+        };
+
+        let currentLang = localStorage.getItem('etno_lang') || 'uz';
+        let currentCurr = localStorage.getItem('etno_curr') || 'UZS';
+        
+        document.getElementById('langSelect').value = currentLang;
+        document.getElementById('currencySelect').value = currentCurr;
+
+        let cart = JSON.parse(localStorage.getItem('etno_cart')) || [];
+        let wishlist = JSON.parse(localStorage.getItem('etno_wishlist')) || [];
+        let productReviews = JSON.parse(localStorage.getItem('etno_reviews')) || {};
+        
+        applyLanguage(currentLang);
+        convertPrices();
+        updateCartUI();
+        updateWishlistUI();
+        checkWishlistIcons();
+
+        function changeLanguage() {
+            currentLang = document.getElementById('langSelect').value;
+            localStorage.setItem('etno_lang', currentLang);
+            applyLanguage(currentLang);
+        }
+
+        function applyLanguage(lang) {
+            let t = translations[lang];
+            document.getElementById('siteTitle').innerText = t.site_title;
+            document.getElementById('categoriesBtnText').innerHTML = `<i class="fa fa-bars text-secondary"></i> ${t.categories}`;
+            document.getElementById('searchInput').placeholder = t.search_placeholder;
+
+            document.querySelectorAll('[data-translate]').forEach(el => {
+                let key = el.getAttribute('data-translate');
+                if (t[key]) el.innerText = t[key];
+            });
+
+            document.querySelectorAll('[data-translate-placeholder]').forEach(el => {
+                let key = el.getAttribute('data-translate-placeholder');
+                if (t[key]) el.placeholder = t[key];
+            });
+        }
+
+        function changeCurrency() {
+            currentCurr = document.getElementById('currencySelect').value;
+            localStorage.setItem('etno_curr', currentCurr);
+            convertPrices();
+            updateCartUI();
+            updateWishlistUI();
+        }
+
+        function convertPrices() {
+            let currObj = currencies[currentCurr];
+            document.querySelectorAll('.price-tag').forEach(el => {
+                let basePriceUZS = parseFloat(el.getAttribute('data-price'));
+                let converted = basePriceUZS / currObj.rate;
+                if (currentCurr === 'UZS') {
+                    el.innerText = converted.toLocaleString('uz-UZ', { maximumFractionDigits: 0 }) + " " + currObj.symbol;
+                } else {
+                    el.innerText = converted.toFixed(2) + " " + currObj.symbol;
+                }
+            });
+            document.getElementById('currencyUnitText').innerText = currObj.symbol;
+        }
+
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'custom-toast';
+            toast.innerHTML = `<i class="fa fa-check-circle text-success fs-5"></i> <span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 350);
+            }, 3000);
+        }
+
+        function addToCart(id, title, price, image) {
+            let item = cart.find(i => i.id === id);
+            if (item) {
+                item.quantity += 1;
+            } else {
+                cart.push({ id, title, price, image, quantity: 1 });
+            }
+            localStorage.setItem('etno_cart', JSON.stringify(cart));
+            updateCartUI();
+            showToast(translations[currentLang].toast_cart);
+        }
+
+        function updateCartUI() {
+            const badge = document.getElementById('cartBadge');
+            const list = document.getElementById('cartItemsList');
+            const totalEl = document.getElementById('cartTotal');
+            
+            let totalCount = cart.reduce((sum, i) => sum + i.quantity, 0);
+            badge.innerText = totalCount;
+
+            if (cart.length === 0) {
+                list.innerHTML = `<p class="text-muted text-center py-4 small">Savatchangiz bo'sh</p>`;
+                totalEl.innerText = '0';
+                return;
+            }
+
+            let html = '';
+            let totalPriceUZS = 0;
+            let currObj = currencies[currentCurr];
+
+            cart.forEach((item, index) => {
+                totalPriceUZS += item.price * item.quantity;
+                let itemConverted = (item.price / currObj.rate);
+                let itemPriceStr = currentCurr === 'UZS' ? itemConverted.toLocaleString('uz-UZ', {maximumFractionDigits:0}) : itemConverted.toFixed(2);
+
+                html += `
+                    <div class="list-group-item d-flex align-items-center justify-content-between px-0 py-2 border-0">
+                        <div class="d-flex align-items-center gap-2">
+                            <img src="${item.image}" class="rounded-3 shadow-sm" style="width: 48px; height: 48px; object-fit: cover;">
+                            <div>
+                                <h6 class="mb-0 small fw-bold text-dark" style="max-width: 140px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.title}</h6>
+                                <small class="text-muted">${itemPriceStr} ${currObj.symbol} x ${item.quantity}</small>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <button class="btn btn-sm btn-outline-secondary py-0 px-2 rounded-circle" onclick="changeQuantity(${index}, -1)">-</button>
+                            <span class="small fw-semibold">${item.quantity}</span>
+                            <button class="btn btn-sm btn-outline-secondary py-0 px-2 rounded-circle" onclick="changeQuantity(${index}, 1)">+</button>
+                            <button class="btn btn-sm text-danger border-0 ms-1" onclick="removeFromCart(${index})"><i class="fa fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+            });
+            list.innerHTML = html;
+
+            let totalConverted = totalPriceUZS / currObj.rate;
+            totalEl.innerText = currentCurr === 'UZS' ? totalConverted.toLocaleString('uz-UZ', {maximumFractionDigits:0}) : totalConverted.toFixed(2);
+        }
+
+        function changeQuantity(index, delta) {
+            cart[index].quantity += delta;
+            if (cart[index].quantity <= 0) {
+                cart.splice(index, 1);
+            }
+            localStorage.setItem('etno_cart', JSON.stringify(cart));
+            updateCartUI();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            localStorage.setItem('etno_cart', JSON.stringify(cart));
+            updateCartUI();
+        }
+
+        function toggleWishlist(id, title, price, image, btn) {
+            let index = wishlist.findIndex(i => i.id === id);
+            let icon = btn.querySelector('i');
+            if (index > -1) {
+                wishlist.splice(index, 1);
+                icon.className = "fa-regular fa-heart text-danger fs-5";
+            } else {
+                wishlist.push({ id, title, price, image });
+                icon.className = "fa-solid fa-heart text-danger fs-5";
+            }
+            localStorage.setItem('etno_wishlist', JSON.stringify(wishlist));
+            updateWishlistUI();
+        }
+
+        function updateWishlistUI() {
+            const badge = document.getElementById('wishlistBadge');
+            const list = document.getElementById('wishlistItemsList');
+            badge.innerText = wishlist.length;
+
+            if (wishlist.length === 0) {
+                list.innerHTML = `<p class="text-muted text-center py-4 small">Sevimli buyumlar yo'q</p>`;
+                return;
+            }
+
+            let html = '';
+            let currObj = currencies[currentCurr];
+
+            wishlist.forEach((item, index) => {
+                let itemConverted = item.price / currObj.rate;
+                let priceStr = currentCurr === 'UZS' ? itemConverted.toLocaleString('uz-UZ', {maximumFractionDigits:0}) : itemConverted.toFixed(2);
+
+                html += `
+                    <div class="list-group-item d-flex align-items-center justify-content-between px-0 py-2 border-0">
+                        <div class="d-flex align-items-center gap-2">
+                            <img src="${item.image}" class="rounded-3 shadow-sm" style="width: 48px; height: 48px; object-fit: cover;">
+                            <div>
+                                <h6 class="mb-0 small fw-bold text-dark" style="max-width: 160px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.title}</h6>
+                                <small class="text-danger fw-semibold">${priceStr} ${currObj.symbol}</small>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-1">
+                            <button class="btn btn-sm btn-dark rounded-pill px-3 py-1" style="font-size: 11px;" onclick="addToCart(${item.id}, '${item.title.replace(/'/g, "\\'")}', ${item.price}, '${item.image}')">Savatga</button>
+                            <button class="btn btn-sm text-danger border-0" onclick="removeFromWishlist(${index})"><i class="fa fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+            });
+            list.innerHTML = html;
+        }
+
+        function removeFromWishlist(index) {
+            wishlist.splice(index, 1);
+            localStorage.setItem('etno_wishlist', JSON.stringify(wishlist));
+            updateWishlistUI();
+            checkWishlistIcons();
+        }
+
+        function checkWishlistIcons() {
+            wishlist.forEach(item => {
+                let btn = document.querySelector(`.wishlist-btn-${item.id} i`);
+                if (btn) btn.className = "fa-solid fa-heart text-danger fs-5";
+            });
+        }
+
+        // Xavfsiz ochish funksiyalari (data-atributlar orqali ishlaydi)
+        function openProductModalFromButton(btn) {
+            let card = btn.closest('.product-item');
+            openModalFromCard(card);
+        }
+
+        function openProductModalFromElement(el) {
+            let card = el.closest('.product-item');
+            openModalFromCard(card);
+        }
+
+        function openModalFromCard(card) {
+            let p = {
+                id: card.getAttribute('data-id'),
+                title: card.getAttribute('data-title'),
+                price: parseFloat(card.getAttribute('data-price')),
+                image: card.getAttribute('data-image'),
+                description: card.getAttribute('data-description'),
+                artisan_name: card.getAttribute('data-artisan')
+            };
+
+            document.getElementById('viewProductId').value = p.id;
+            document.getElementById('viewProductName').innerText = p.title;
+            document.getElementById('viewProductImg').src = p.image;
+            document.getElementById('viewProductArtisan').innerText = p.artisan_name;
+            
+            let currObj = currencies[currentCurr];
+            let converted = p.price / currObj.rate;
+            let priceStr = currentCurr === 'UZS' ? converted.toLocaleString('uz-UZ', {maximumFractionDigits:0}) : converted.toFixed(2);
+            document.getElementById('viewProductPrice').innerText = priceStr + " " + currObj.symbol;
+
+            document.getElementById('viewProductDesc').innerText = p.description;
+            
+            document.getElementById('viewProductCartBtn').onclick = function() {
+                addToCart(parseInt(p.id), p.title, p.price, p.image);
+            };
+
+            renderReviews(p.id);
+            new bootstrap.Modal(document.getElementById('productViewModal')).show();
+        }
+
+        function renderReviews(productId) {
+            const list = document.getElementById('productReviewsList');
+            let reviews = productReviews[productId] || [];
+            if (reviews.length === 0) {
+                list.innerHTML = `<p class="text-muted small mb-0">Hozircha izohlar yo'q. Birinchi bo'lib fikr qoldiring!</p>`;
+                return;
+            }
+            let html = '';
+            reviews.forEach(r => {
+                let stars = '⭐'.repeat(r.rating);
+                html += `
+                    <div class="bg-white p-3 rounded-4 mb-2 shadow-sm border border-opacity-50">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="fw-bold small text-dark">${r.name}</span>
+                            <span class="small">${stars}</span>
+                        </div>
+                        <p class="text-muted small mb-0">${r.text}</p>
+                    </div>
+                `;
+            });
+            list.innerHTML = html;
+        }
+
+        function submitReview(event) {
+            event.preventDefault();
+            let productId = document.getElementById('reviewProductId').value;
+            let name = document.getElementById('reviewerName').value;
+            let rating = parseInt(document.getElementById('reviewRating').value);
+            let text = document.getElementById('reviewText').value;
+
+            if (!productReviews[productId]) productReviews[productId] = [];
+            productReviews[productId].push({ name, rating, text });
+            
+            localStorage.setItem('etno_reviews', JSON.stringify(productReviews));
+            renderReviews(productId);
+            document.getElementById('reviewForm').reset();
+            showToast(translations[currentLang].toast_review);
+        }
+
+        async function submitOrder(event) {
+            event.preventDefault();
+            
+            let userName = document.getElementById('userName').value;
+            let phone = document.getElementById('userPhone').value;
+            let address = document.getElementById('userAddress').value;
+            let paymentMethod = document.getElementById('paymentMethod').value;
+            
+            let totalAmount = cart.reduce((sum, i) => sum + (i.price * i.quantity), 0);
+
+            try {
+                let response = await fetch('/api/create-order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        user_name: userName,
+                        phone: phone,
+                        address: address,
+                        payment_method: paymentMethod,
+                        amount: totalAmount,
+                        cart_items: cart
+                    })
+                });
+                let result = await response.json();
+                if (result.success) {
+                    showToast(translations[currentLang].toast_order);
+                    cart = [];
+                    localStorage.removeItem('etno_cart');
+                    updateCartUI();
+                    bootstrap.Modal.getInstance(document.getElementById('cartModal')).hide();
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    </script>
+</body>
+</html>

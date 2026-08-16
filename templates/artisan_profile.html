@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Etnoart — Hunarmandlar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-stone-50 text-stone-800 p-4 max-w-4xl mx-auto space-y-4">
+
+    <div class="flex items-center space-x-3 mb-6">
+        <span class="text-3xl">👨‍🎨</span>
+        <div>
+            <h1 class="text-xl font-bold text-stone-900">Nufuzli Ustalarimiz</h1>
+            <p class="text-xs text-stone-500">O'zbekiston madaniy san'ati vakillari</p>
+        </div>
+    </div>
+
+    <div class="space-y-3">
+        {% for a in artisans %}
+        <div class="bg-white p-4 rounded-2xl border border-stone-200/80 shadow-sm flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-12 h-12 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center font-bold text-lg border border-amber-200">
+                    {{ a.name[0] }}
+                </div>
+                <div>
+                    <h3 class="font-bold text-stone-900 text-sm">{{ a.name }}</h3>
+                    <p class="text-xs text-amber-700 font-medium">{{ a.craft_type }} • {{ a.region }}</p>
+                    <p class="text-[11px] text-stone-400 mt-0.5">{{ a.phone }}</p>
+                </div>
+            </div>
+
+            {% if a.latitude and a.longitude %}
+            <a href="https://www.google.com/maps?q={{ a.latitude }},{{ a.longitude }}" target="_blank" 
+               class="bg-stone-100 hover:bg-stone-200 text-stone-700 p-2.5 rounded-xl text-xs font-semibold flex items-center space-x-1">
+                <i class="fa-solid fa-location-dot text-amber-600"></i>
+                <span>Xarita</span>
+            </a>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+</body>
+</html>

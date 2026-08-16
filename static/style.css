@@ -1,0 +1,167 @@
+/* Asosiy uslublar va shriftlar */
+body {
+    background-color: #fdfbf7;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+}
+
+/* Logotip uchun yangi uslublar */
+.brand-logo-container {
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+    border-radius: 8px; /* Burchaklarini ozgina yumaloqlash */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.brand-logo {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Rasm o'z holatini saqlagan holda sig'adi */
+}
+
+/* Toast xabarnoma oynasi dizayni */
+#toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1080;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.custom-toast {
+    background: #ffffff;
+    color: #212529;
+    padding: 12px 20px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.9rem;
+    border-left: 4px solid #198754;
+    animation: slideInToast 0.35s ease forwards;
+}
+
+@keyframes slideInToast {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Karta va elementlar ko'rinishi */
+.product-item {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.product-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Modal oynalar tozaligi uchun */
+.modal-content {
+    border-radius: 1rem;
+    border: none;
+}
+
+/* Modal ichidagi baholash va sharhlar dizayni */
+#productViewModal .modal-body {
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+/* Xaridorlar sharhlar ro'yxati bloki */
+#productReviewsList {
+    background: #fcf9f2;
+    padding: 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border-subtle, #e8e1d1);
+}
+
+.review-item {
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.review-item:last-child {
+    border-bottom: none;
+}
+
+/* Yulduzchalar rangi */
+.text-warning {
+    color: #b8860b !important;
+}
+
+/* --- "Kirish" (Войти) tugmasi dizayni --- */
+.btn-auth-login {
+    background-color: transparent;
+    border: 2px solid #b8860b;
+    color: #b8860b;
+    font-weight: 600;
+    padding: 6px 18px;
+    border-radius: 50rem;
+    transition: all 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-auth-login:hover {
+    background-color: #b8860b;
+    color: #ffffff;
+    box-shadow: 0 4px 15px rgba(184, 134, 11, 0.3);
+    transform: translateY(-2px);
+}
+
+/* Foydalanuvchi akkaunti modal oynasi uchun stillar */
+.auth-modal-tabs .nav-link {
+    color: #6c757d;
+    font-weight: 600;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 10px 20px;
+}
+
+.auth-modal-tabs .nav-link.active {
+    color: #b8860b !important;
+    background-color: transparent !important;
+    border-bottom: 2px solid #b8860b;
+}
+
+.auth-input-group {
+    position: relative;
+}
+
+.auth-input-group .form-control {
+    border-radius: 12px;
+    padding: 12px 15px 12px 42px;
+    border: 1px solid #e8e1d1;
+    background-color: #fcf9f2;
+    font-size: 0.95rem;
+}
+
+.auth-input-group .form-control:focus {
+    border-color: #b8860b;
+    box-shadow: 0 0 0 0.25rem rgba(184, 134, 11, 0.15);
+    background-color: #ffffff;
+}
+
+.auth-input-group i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+}
