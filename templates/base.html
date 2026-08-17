@@ -55,6 +55,95 @@
             color: #ffffff !important;
             border-color: #444444 !important;
         }
+
+        /* Bootstrap utility klasslari o'z ranglarini Bootstrap o'zgaruvchilaridan oladi,
+           bizning --text-muted kabi custom o'zgaruvchilarni bilmaydi — shuning uchun
+           dark mode uchun ularni alohida qayta belgilash kerak */
+        body.dark-mode .text-muted {
+            color: var(--text-muted) !important;
+        }
+        body.dark-mode .text-secondary {
+            color: #b5b0a5 !important;
+        }
+        body.dark-mode .text-dark {
+            color: var(--text-main) !important;
+        }
+        body.dark-mode h1, body.dark-mode h2, body.dark-mode h3,
+        body.dark-mode h4, body.dark-mode h5, body.dark-mode h6 {
+            color: var(--text-main);
+        }
+
+        /* Jadvallar (masalan admin panel mahsulotlar ro'yxati) */
+        body.dark-mode .table {
+            --bs-table-bg: var(--card-bg);
+            --bs-table-color: var(--text-main);
+            --bs-table-border-color: var(--border-color);
+            color: var(--text-main);
+        }
+        body.dark-mode .table th {
+            color: var(--text-muted);
+            border-color: var(--border-color) !important;
+        }
+        body.dark-mode .table td {
+            border-color: var(--border-color) !important;
+        }
+
+        /* Bootstrap'ning bg-light / bg-white klasslari */
+        body.dark-mode .bg-light {
+            background-color: #242424 !important;
+            color: var(--text-main) !important;
+        }
+        body.dark-mode .bg-white {
+            background-color: var(--card-bg) !important;
+            color: var(--text-main) !important;
+        }
+
+        /* Chegaralar */
+        body.dark-mode .border {
+            border-color: var(--border-color) !important;
+        }
+        body.dark-mode hr {
+            border-color: var(--border-color) !important;
+            opacity: 0.5;
+        }
+
+        /* Konturli tugmalar */
+        body.dark-mode .btn-outline-dark {
+            color: var(--text-main) !important;
+            border-color: #555555 !important;
+        }
+        body.dark-mode .btn-outline-dark:hover {
+            background-color: #2a2a2a !important;
+            color: #ffffff !important;
+        }
+        body.dark-mode .btn-outline-secondary {
+            color: var(--text-main) !important;
+            border-color: #555555 !important;
+        }
+        body.dark-mode .btn-outline-primary {
+            color: var(--text-main) !important;
+            border-color: #555555 !important;
+        }
+
+        /* Belgilar (badge) */
+        body.dark-mode .badge.bg-secondary-subtle {
+            background-color: #333333 !important;
+            color: #dddddd !important;
+        }
+        body.dark-mode .badge.bg-light {
+            background-color: #333333 !important;
+            color: #dddddd !important;
+        }
+
+        /* Sidebar navigatsiya havolalari (agar mavjud bo'lsa) */
+        body.dark-mode .nav-link {
+            color: var(--text-muted);
+        }
+        body.dark-mode .nav-link:hover,
+        body.dark-mode .nav-link.active {
+            background-color: #242424;
+            color: #ffffff;
+        }
     </style>
     {% block extra_head %}{% endblock %}
 </head>
@@ -164,3 +253,4 @@
     {% block extra_js %}{% endblock %}
 </body>
 </html>
+<!-- new -->
